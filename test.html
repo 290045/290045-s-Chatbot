@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Chatbot Backend Test</title>
+</head>
+<body>
+  <h2>Test /chat endpoint</h2>
+  <form id="testForm">
+    <input type="text" id="msg" placeholder="Type a message">
+    <button type="submit">Send</button>
+  </form>
+  <pre id="output"></pre>
+
+  <script>
+    document.getElementById("testForm").addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const message = document.getElementById("msg").value;
+      const res = await fetch("https://290045s-chatbot.vercel.app/chat", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ message })
+      });
+      const data = await res.json();
+      document.getElementById("output").textContent = JSON.stringify(data, null, 2);
+    });
+  </script>
+</body>
+</html>
