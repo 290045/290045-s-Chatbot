@@ -1,25 +1,33 @@
-const API_KEY = "YOUR_GOOGLE_API_KEY"; // put your key here
+// Replace with your HuggingFace API key
+const API_KEY = "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";
 
+// Call HuggingFace Gemma model
 async function callAI(message) {
   const response = await fetch(
-    `https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=${API_KEY}`,
+    "https://api-inference.huggingface.co/models/google/gemma-2b-it",
     {
       method: "POST",
       headers: {
+        "Authorization": `Bearer ${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}`,
         "Content-Type": "application/json"
       },
       body: JSON.stringify({
-        contents: [{
-          parts: [{ text: message }]
-        }]
+        inputs: message
       })
     }
   );
 
   const data = await response.json();
-  return data.candidates[0].content.parts[0].text;
+
+  // HuggingFace returns an array of outputs
+  if (data && data[0] && data[0].generated_text) {
+    return data[0].generated_text;
+  } else {
+    return "⚠️ Error: No response from Gemma.";
+  }
 }
 
+// Add message to chatbox
 function addMessage(sender, text) {
   const chatbox = document.getElementById("chatbox");
   const msg = document.createElement("div");
@@ -28,6 +36,7 @@ function addMessage(sender, text) {
   chatbox.scrollTop = chatbox.scrollHeight;
 }
 
+// Handle sending user input
 async function sendMessage() {
   const input = document.getElementById("userInput");
   const text = input.value.trim();
@@ -36,10 +45,17 @@ async function sendMessage() {
   addMessage("You", text);
   input.value = "";
 
+  // Temporary placeholder
   addMessage("AI", "Thinking...");
 
-  const aiReply = await callAI(text);
+  try {
+    const aiReply = await callAI(text);
 
-  // Replace "Thinking..." with real response
-  const chatbox = document.getElementById("chatbox");
-  chatbox.lastChild.innerHTML = `<b>AI:</b> ${aiReply
+    // Replace "Thinking..." with real response
+    const chatbox = document.getElementById("chatbox");
+    chatbox.lastChild.innerHTML = `<b>AI:</b> ${aiReply}`;
+  } catch (err) {
+    const chatbox = document.getElementById("chatbox");
+    chatbox.lastChild.innerHTML = `<b>AI:</b> ⚠️ Error calling Gemma: ${err.message}`;
+  }
+}
