@@ -3,9 +3,7 @@ import fetch from "node-fetch";
 
 const app = express();
 const PORT = process.env.PORT || 3000;
-
-// ✅ Reads your HuggingFace key from Vercel environment variables
-const API_KEY = process.env.HF_KEY;
+const API_KEY = process.env.HF_KEY; // reads your HuggingFace key
 
 app.use(express.json());
 
