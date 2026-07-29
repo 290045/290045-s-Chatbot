@@ -1,5 +1,5 @@
 async function callAI(message) {
-  const response = await fetch("https://290045s-chatbot-flts05sy4-290045.vercel.app/chat", {
+  const response = await fetch("https://290045s-chatbot.vercel.app/", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ message })
